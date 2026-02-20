@@ -3,4 +3,4 @@ djangorestframework
 psycopg2-binary
 django-cors-headers
 python-dotenv
-google-generativeai
+google-genai

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import API from "../api";
 
 const STATUS_OPTIONS = ["open", "in_progress", "resolved", "closed"];
@@ -25,8 +25,9 @@ export default function TicketList({ refreshKey }) {
     category: "",
   });
   const [search, setSearch] = useState("");
+  const isMounted = useRef(false);
 
-  const fetchTickets = async () => {
+  const fetchTickets = useCallback(async () => {
     try {
       const params = {};
       if (filters.status) params.status = filters.status;
@@ -39,11 +40,29 @@ export default function TicketList({ refreshKey }) {
     } catch (err) {
       console.error("Failed to fetch tickets:", err);
     }
-  };
+  }, [filters, search]);
 
   useEffect(() => {
-    fetchTickets();
-  }, [refreshKey, filters]);
+    isMounted.current = true;
+    const load = async () => {
+      const params = {};
+      if (filters.status) params.status = filters.status;
+      if (filters.priority) params.priority = filters.priority;
+      if (filters.category) params.category = filters.category;
+      if (search.trim()) params.search = search.trim();
+
+      try {
+        const res = await API.get("/tickets/", { params });
+        if (isMounted.current) setTickets(res.data);
+      } catch (err) {
+        console.error("Failed to fetch tickets:", err);
+      }
+    };
+    load();
+    return () => {
+      isMounted.current = false;
+    };
+  }, [refreshKey, filters, search]);
 
   const handleStatusChange = async (id, newStatus) => {
     try {

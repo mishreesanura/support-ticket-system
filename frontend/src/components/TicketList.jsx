@@ -5,6 +5,7 @@ import {
   MagnifyingGlassIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
+import TicketDetail from "./TicketDetail";
 
 const STATUS_OPTIONS = ["open", "in_progress", "resolved", "closed"];
 
@@ -50,6 +51,7 @@ export default function TicketList({ refreshKey }) {
     category: "",
   });
   const [search, setSearch] = useState("");
+  const [selectedTicket, setSelectedTicket] = useState(null);
   const isMounted = useRef(false);
 
   const fetchTickets = useCallback(async () => {
@@ -108,6 +110,12 @@ export default function TicketList({ refreshKey }) {
 
   return (
     <div className="card">
+      {selectedTicket && (
+        <TicketDetail
+          ticket={selectedTicket}
+          onClose={() => setSelectedTicket(null)}
+        />
+      )}
       <div className="p-4 border-b border-slate-100 flex flex-wrap gap-4 items-center justify-between bg-slate-50/50">
         <h2 className="font-semibold text-slate-800">All Tickets</h2>
 
@@ -175,7 +183,8 @@ export default function TicketList({ refreshKey }) {
               tickets.map((ticket) => (
                 <tr
                   key={ticket.id}
-                  className="hover:bg-slate-50/80 transition-colors group"
+                  className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                  onClick={() => setSelectedTicket(ticket)}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="relative inline-block text-left">
@@ -184,6 +193,7 @@ export default function TicketList({ refreshKey }) {
                         onChange={(e) =>
                           handleStatusChange(ticket.id, e.target.value)
                         }
+                        onClick={(e) => e.stopPropagation()}
                         className={`appearance-none cursor-pointer pl-3 pr-8 py-1 rounded-full text-xs font-medium border ${statusConfig[ticket.status]?.bg} ${statusConfig[ticket.status]?.border} ${statusConfig[ticket.status]?.text} focus:outline-none focus:ring-2 focus:ring-indigo-500/20 shadow-sm`}
                       >
                         {STATUS_OPTIONS.map((s) => (

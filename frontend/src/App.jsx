@@ -16,12 +16,10 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
- 
               <div>
                 <h1 className="text-xl font-bold text-slate-800 tracking-tight">
                   Support Ticket System
                 </h1>
-                
               </div>
             </div>
           </div>
@@ -29,14 +27,6 @@ function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-slate-900">Dashboard</h2>
-            <span className="text-sm text-slate-500">Live Overview</span>
-          </div>
-          <Dashboard key={refreshKey} />
-        </section>
-
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <section className="lg:col-span-4 lg:sticky lg:top-24">
             <div className="mb-4">
@@ -64,6 +54,14 @@ function App() {
             <TicketList refreshKey={refreshKey} />
           </section>
         </div>
+
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-slate-900">Dashboard</h2>
+            <span className="text-sm text-slate-500">Live Overview</span>
+          </div>
+          <Dashboard key={refreshKey} />
+        </section>
       </main>
     </div>
   );
